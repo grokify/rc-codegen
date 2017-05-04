@@ -1,0 +1,9 @@
+{% if definition.with_namespace %}
+package ringcentral
+{% endif %}
+
+type {{ definition.name }} struct {
+    {% for field in definition.fields %}
+    {{ field.name }} {{ field.type }} 
+    {% endfor %}
+}

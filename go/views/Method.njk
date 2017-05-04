@@ -1,0 +1,47 @@
+{% macro endpoint(method) %}
+    {% if method.method == 'list' %}
+        Endpoint(false)
+    {% else %}
+        Endpoint(true)
+    {% endif %}
+{% endmacro %}
+
+
+// {{ method.description }}
+{% if method.responseName == '' %}
+    public async Task<bool> {{ method.method | capitalize }}() 
+    {
+        await RC.{{ method.method | http_method | capitalize }}({{ endpoint(method) | trim }}, null);
+        return true;
+    }
+    {% if method.parametersName != '' %}
+        // {{ method.description }}
+        public async Task<bool> {{ method.method | capitalize }}(object parameters)
+        {
+            await RC.{{ method.method | http_method | capitalize }}({{ endpoint(method) | trim }}, parameters);
+            return true;
+        }
+        // {{ method.description }}
+        public Task<bool> {{ method.method | capitalize }}({{ method.parametersName }} parameters)
+        {
+            return {{ method.method | capitalize }}(parameters as object);
+        }
+    {% endif %}
+{% else %}
+    public Task<{{ method.responseName }}> {{ method.method | capitalize }}()
+    {
+      return RC.{{ method.method | http_method | capitalize }}<{{ method.responseName }}>({{ endpoint(method) | trim }}, null);
+    }
+    {% if method.parametersName != '' %}
+        // {{ method.description }}
+        public Task<{{ method.responseName }}> {{ method.method | capitalize }}(object parameters)
+        {
+          return RC.{{ method.method | http_method | capitalize }}<{{ method.responseName }}>({{ endpoint(method) | trim }}, parameters);
+        }
+        // {{ method.description }}
+        public Task<{{ method.responseName }}> {{ method.method | capitalize }}({{ method.parametersName }} parameters)
+        {
+            return {{ method.method | capitalize }}(parameters as object);
+        }
+    {% endif %}
+{% endif %}
