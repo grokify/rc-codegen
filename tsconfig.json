@@ -9,6 +9,7 @@
     "index.ts",
     "typescript/index.ts",
     "csharp/index.ts",
+    "go/index.ts",
     "ruby/index.ts",
     "swift/index.ts",
     "typings/index.d.ts"
